@@ -7105,20 +7105,6 @@ react-native-file-access@^2.4.4:
   resolved "https://registry.yarnpkg.com/react-native-file-access/-/react-native-file-access-2.4.4.tgz#4ed95d81b04c5d7dbba5a9ae0c0deff0c8950a8a"
   integrity sha512-P4lHb2244qGXaUPAoOsWnc9Py+igiQEpwsK5qQj3lilyiumbl/kCS5b4AbJtfObXwNn5u/drl2JEVVX4+zRQ3w==
 
-react-native-reanimated@^2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.9.1.tgz#d9a932e312c13c05b4f919e43ebbf76d996e0bc1"
-  integrity sha512-309SIhDBwY4F1n6e5Mr5D1uPZm2ESIcmZsGXHUu8hpKX4oIOlZj2MilTk+kHhi05LjChoJkcpfkstotCJmPRPg==
-  dependencies:
-    "@babel/plugin-proposal-export-namespace-from" "^7.17.12"
-    "@babel/plugin-transform-object-assign" "^7.16.7"
-    "@babel/preset-typescript" "^7.16.7"
-    "@types/invariant" "^2.2.35"
-    invariant "^2.2.4"
-    lodash.isequal "^4.5.0"
-    setimmediate "^1.0.5"
-    string-hash-64 "^1.0.3"
-
 react-native@^0.67.4:
   version "0.67.4"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.67.4.tgz#57a1503daa81f66a61f521ff67b259f126d87f9c"
