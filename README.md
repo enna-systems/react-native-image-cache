@@ -44,13 +44,13 @@ Inspired by:
 #### yarn:
 
 ```bash
-yarn add @georstat/react-native-image-cache
+yarn add @georstat/react-native-image-cache react-native-file-access react-native-reanimated
 ```
 
 #### npm:
 
 ```bash
-npm i @georstat/react-native-image-cache
+npm i @georstat/react-native-image-cache react-native-file-access react-native-reanimated
 ```
 
 #### link native packages:
@@ -228,6 +228,7 @@ await CacheManager.isImageCached(uri);
 | `onLoadEnd`                      | `Func`               | Invoked when load either succeeds or fails                                                                                                                                                                     |
 | `resizeMode`                     | `String`             | React native Image component [resizeMode](https://reactnative.dev/docs/image#resizemode) defaults to `contain`                                                                                                 |
 | `testID`                         | `String`             | testID, useful for tests                                                                                                                                                                                       |
+| `tintColor`                      | `String`             | tintColor of the source image                                                                                                                                                                                  |
 | `style`                          | `Object`             | `source` AND `thumbnailSource` image style                                                                                                                                                                     |
 | `options`                        | `Object`             | custom options for the fetch image http request eg. `{headers:{}, body:{}}`                                                                                                                                    |
 | `accessibilityHint`              | `string`             | accessibility hint for `source` (optional)                                                                                                                                                                     |

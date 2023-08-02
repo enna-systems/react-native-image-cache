@@ -33,7 +33,8 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
-
+# testing
+/coverage
 # BUCK
 buck-out/
 \.buckd/
@@ -56,3 +57,4 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+/vendor/bundle/ruby/2.7.0/*

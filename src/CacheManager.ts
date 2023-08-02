@@ -103,7 +103,11 @@ export default class CacheManager {
     noCache?: boolean,
     maxAge?: number
   ): CacheEntry {
-    if (!CacheManager.entries[source]) {
+    if (
+      !CacheManager.entries[source] ||
+      CacheManager.entries[source].options?.headers?.Authorization !==
+        options?.headers?.Authorization
+    ) {
       CacheManager.entries[source] = new CacheEntry(
         source,
         options,
@@ -116,12 +120,14 @@ export default class CacheManager {
   }
 
   static async clearCache(): Promise<void> {
-    const files = await FileSystem.ls(CacheManager.config.baseDir);
-    for (const file of files) {
-      try {
-        await FileSystem.unlink(`${CacheManager.config.baseDir}${file}`);
-      } catch (e) {
-        console.log(`error while clearing images cache, error: ${e}`);
+    if (await FileSystem.exists(CacheManager.config.baseDir)) {
+      const files = await FileSystem.ls(CacheManager.config.baseDir);
+      for (const file of files) {
+        try {
+          await FileSystem.unlink(`${CacheManager.config.baseDir}${file}`);
+        } catch (e) {
+          console.log(`error while clearing images cache, error: ${e}`);
+        }
       }
     }
   }

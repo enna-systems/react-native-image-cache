@@ -38,7 +38,7 @@ function useStateIfMounted<S>(
   const [state, setState] = React.useState(initialState);
 
   const newSetState = useCallback(
-    value => {
+    (value: any) => {
       if (isComponentMounted.current) {
         setState(value);
       }
@@ -52,7 +52,7 @@ function useStateIfMounted<S>(
 const CachedImage = (props: IProps & typeof defaultProps) => {
   const [error, setError] = useStateIfMounted<boolean>(false);
   const [uri, setUri] = useStateIfMounted<string | undefined>(undefined);
-  const { source: propsSource } = props;
+  const { source: propsSource, options: propsOptions } = props;
   const [currentSource, setCurrentSource] = React.useState<string>(propsSource);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
       setUri(undefined);
     }
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [propsSource, uri]);
+  }, [propsSource, uri, propsOptions]);
 
   const load = async ({
     maxAge,
