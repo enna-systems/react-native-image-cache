@@ -12,18 +12,11 @@ import {
   Platform,
   StyleSheet,
   View,
+  Image,
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 
 import CacheManager from './CacheManager';
 import { ImageProps, IProps } from './types';
-
-const AnimatedImage = Animated.Image;
-const AnimatedView = Animated.View;
 
 const defaultProps = {
   onError: () => {},
@@ -63,29 +56,10 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   const { source: propsSource, options: propsOptions } = props;
   const currentSource = useRef<string>(propsSource);
 
-  const animatedImage = useSharedValue(0);
-
-  const animatedThumbnailImage = useSharedValue(0);
-
-  const animatedLoadingImage = useSharedValue(1);
-
-  const imageSourceStyle = useAnimatedStyle(() => {
-    return { opacity: animatedImage.value };
-  });
-
-  const thumbnailSourceStyle = useAnimatedStyle(() => {
-    return { opacity: animatedThumbnailImage.value };
-  });
-
-  const animatedLoadingImageStyle = useAnimatedStyle(() => {
-    return { opacity: animatedLoadingImage.value };
-  });
-
   useEffect(() => {
     load(props).catch();
     if (propsSource !== currentSource.current) {
       currentSource.current = propsSource;
-      resetAnimations();
     }
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [propsSource, propsOptions]);
@@ -123,24 +97,6 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
       }
     }
   };
-  const resetAnimations = () => {
-    animatedLoadingImage.value = 1;
-    animatedThumbnailImage.value = 0;
-    animatedImage.value = 0;
-  };
-
-  const onThumbnailLoad = () => {
-    animatedLoadingImage.value = withTiming(0, {}, () => {
-      animatedThumbnailImage.value = withTiming(1, {
-        duration:
-          props.thumbnailAnimationDuration === 0
-            ? 0
-            : props.thumbnailAnimationDuration ||
-              CacheManager?.config?.thumbnailAnimationDuration ||
-              100,
-      });
-    });
-  };
 
   const onImageError = (): void => setError(true);
 
@@ -148,14 +104,6 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
     if (props.onLoad) {
       props.onLoad(e);
     }
-    animatedImage.value = withTiming(1, {
-      duration:
-        props.sourceAnimationDuration === 0
-          ? 0
-          : props.sourceAnimationDuration ||
-            CacheManager?.config?.sourceAnimationDuration ||
-            100,
-    });
   };
 
   const {
@@ -179,8 +127,6 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
     ...rest
   } = props;
 
-  const isImageReady = useMemo(() => !!uri, [uri, propsSource]);
-
   const imageSource = useMemo(() => {
     return error || !uri
       ? loadingSource
@@ -191,60 +137,21 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
 
   return (
     <View style={[styles.container, style]} testID={testID}>
-      {!isImageReady &&
-        (LoadingImageComponent ? (
-          <AnimatedView
-            style={[styles.loadingImageStyle, animatedLoadingImageStyle]}
-          >
-            <LoadingImageComponent />
-          </AnimatedView>
-        ) : (
-          <View style={[styles.loadingImageStyle]}>
-            {loadingSource && (
-              <AnimatedImage
-                accessibilityHint={accessibilityHintLoadingImage}
-                accessibilityLabel={accessibilityLabelLoadingImage}
-                accessibilityRole={accessibilityRoleLoadingSource || 'image'}
-                accessible
-                resizeMode={resizeMode || 'contain'}
-                style={[animatedLoadingImageStyle, loadingImageStyle]}
-                source={loadingSource}
-              />
-            )}
-          </View>
-        ))}
-      {thumbnailSource && (
-        <AnimatedImage
-          accessibilityHint={accessibilityHintThumbnail}
-          accessibilityLabel={accessibilityLabelThumbnail}
-          accessibilityRole={accessibilityRoleThumbnail || 'image'}
-          accessible
-          blurRadius={blurRadius || CacheManager.config.blurRadius}
-          onLoad={onThumbnailLoad}
-          resizeMode={resizeMode || 'contain'}
-          source={{ uri: thumbnailSource, ...propsOptions }}
-          style={[style, thumbnailSourceStyle]}
-        />
-      )}
-      {imageSource && (
-        <AnimatedImage
-          {...rest}
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole={accessibilityRole || 'image'}
-          accessible
-          onError={onImageError}
-          onLoad={onImageLoad}
-          onLoadEnd={props.onLoadEnd}
-          resizeMode={resizeMode || 'contain'}
-          // @ts-ignore, reanimated image doesn't have tintColor typing
-          tintColor={props.tintColor}
-          // @ts-ignore
-          source={imageSource}
-          // @ts-ignore
-          style={[styles.imageStyle, imageSourceStyle]}
-        />
-      )}
+      <Image
+        {...rest}
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole={accessibilityRole || 'image'}
+        accessible
+        onError={onImageError}
+        onLoad={onImageLoad}
+        onLoadEnd={props.onLoadEnd}
+        resizeMode={resizeMode || 'contain'}
+        // @ts-ignore
+        source={imageSource}
+        // @ts-ignore
+        style={[styles.imageStyle]}
+      />
     </View>
   );
 };

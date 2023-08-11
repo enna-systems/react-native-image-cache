@@ -68,11 +68,11 @@ export interface IProps {
 
 export interface Config {
   baseDir: string;
-  blurRadius: number;
+  blurRadius?: number;
   cacheLimit: number;
   getCustomCacheKey?: (source: string) => string;
   maxRetries?: number;
   retryDelay?: number;
-  sourceAnimationDuration: number;
-  thumbnailAnimationDuration: number;
+  sourceAnimationDuration?: number;
+  thumbnailAnimationDuration?: number;
 }
