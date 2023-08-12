@@ -108,22 +108,12 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
 
   const {
     accessibilityRole,
-    accessibilityRoleThumbnail,
-    accessibilityRoleLoadingSource,
     accessibilityHint,
-    accessibilityHintLoadingImage,
-    accessibilityHintThumbnail,
     accessibilityLabel,
-    accessibilityLabelLoadingImage,
-    accessibilityLabelThumbnail,
-    blurRadius,
-    loadingImageComponent: LoadingImageComponent,
-    loadingImageStyle = props.style,
     loadingSource,
     resizeMode,
     style,
     testID,
-    thumbnailSource,
     ...rest
   } = props;
 
