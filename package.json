@@ -35,7 +35,7 @@
     "example": "yarn --cwd example",
     "prettier": "prettier \"**/*.{ts,tsx,js}\" --write",
     "bootstrap": "yarn install && yarn example",
-    "prepare": "husky install"
+    "prepare": "yarn build && husky install"
   },
   "dependencies": {
     "crypto-js": "^4.1.1",
