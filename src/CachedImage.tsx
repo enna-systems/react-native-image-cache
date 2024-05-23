@@ -8,8 +8,8 @@ import React, {
 } from 'react';
 import {
   ImageLoadEventData,
+  ImageSourcePropType,
   NativeSyntheticEvent,
-  Platform,
   StyleSheet,
   View,
   Image,
@@ -17,6 +17,7 @@ import {
 
 import CacheManager from './CacheManager';
 import { ImageProps, IProps } from './types';
+import { isAndroid, isImageWithRequire, isRemoteImage } from './helpers';
 
 const defaultProps = {
   onError: () => {},
@@ -57,7 +58,12 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   const currentSource = useRef<string>(propsSource);
 
   useEffect(() => {
-    load(props).catch();
+    if (isRemoteImage(propsSource)) {
+      load(props as ImageProps).catch();
+    } else {
+      setUri(propsSource);
+    }
+
     if (propsSource !== currentSource.current) {
       currentSource.current = propsSource;
     }
@@ -98,7 +104,12 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
     }
   };
 
-  const onImageError = (): void => setError(true);
+  const onImageError = (): void => {
+    if (props.onError) {
+      props.onError();
+    }
+    setError(true);
+  };
 
   const onImageLoad = (e: NativeSyntheticEvent<ImageLoadEventData>): void => {
     if (props.onLoad) {
@@ -107,9 +118,9 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   };
 
   const {
-    accessibilityRole,
     accessibilityHint,
     accessibilityLabel,
+    accessibilityRole,
     loadingSource,
     resizeMode,
     style,
@@ -118,12 +129,21 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   } = props;
 
   const imageSource = useMemo(() => {
-    return error || !uri
-      ? loadingSource
-      : {
-          uri: Platform.OS === 'android' ? `file://${uri}` : uri,
-        };
-  }, [uri, error]);
+    if (error || !uri) {
+      return loadingSource;
+    }
+
+    if (isRemoteImage(propsSource) || !isImageWithRequire(propsSource)) {
+      return {
+        uri: isAndroid() ? `file://${uri}` : uri,
+      };
+    }
+
+    /* If reached here it means it's not http image or local path eg:"/data/user/0/com.reactnativeimagecacheexample/.."
+     * so its local image with Require method
+     */
+    return uri as ImageSourcePropType;
+  }, [uri, error, propsSource]);
 
   return (
     <View style={[styles.container, style]} testID={testID}>

@@ -15,6 +15,7 @@ Inspired by:
 ## Features
 
 - Cache **remote** images in file system with progressive loading
+- Can be used with local images
 - Uses [`react-native-file-access`](https://github.com/alpha0010/react-native-file-access) for file system access
 - Written in `Typescript`
 - Uses [`react-native-reanimated`](https://docs.swmansion.com/react-native-reanimated/docs/) for animations
@@ -70,7 +71,7 @@ For react native >= 0.65 use [`react-native-file-access`](https://github.com/alp
 
 #### Put this Global config on your app entry eg. `App.tsx` or `index.js` (**Required**):
 
-**_Note_**: `retryDelay` and `maxRetries` are optional, they default to `0` which means retry logic is **disabled** 
+**_Note_**: `retryDelay` and `maxRetries` are optional, they default to `0` which means retry logic is **disabled**
 
 ```tsx
 import { CacheManager } from '@georstat/react-native-image-cache';
@@ -149,7 +150,7 @@ import { CachedImage } from '@georstat/react-native-image-cache';
 Accepts 2 parameters:
 
 | Parameter | Type              | Description                                                                            |
-| --------- | ----------------- | -------------------------------------------------------------------------------------- |
+|-----------|-------------------|----------------------------------------------------------------------------------------|
 | `image`   | `Array or String` | (Required) uri of remote image or array of remote uri strings                          |
 | `options` | `Object`          | (Optional) custom options for the fetch image http request eg. `{headers:{}, body:{}}` |
 
@@ -174,7 +175,7 @@ CacheManager.prefetch(urls); // prefetch mutliple images
 Accepts 2 parameters:
 
 | Parameter | Type     | Description                                                                            |
-| --------- | -------- | -------------------------------------------------------------------------------------- |
+|-----------|----------|----------------------------------------------------------------------------------------|
 | `image`   | `String` | (Required) uri of remote image                                                         |
 | `options` | `Object` | (Optional) custom options for the fetch image http request eg. `{headers:{}, body:{}}` |
 
@@ -219,8 +220,8 @@ await CacheManager.isImageCached(uri);
 #### `CachedImage` accepts the following props:
 
 | Properties                       | PropType             | Description                                                                                                                                                                                                    |
-| -------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `source`                         | `String`             | (**Required**) Uri of remote image.                                                                                                                                                                            |
+|----------------------------------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `source`                         | `String`             | (**Required**) Uri of image.                                                                                                                                                                                   |
 | `sourceAnimationDuration`        | `Number`             | `source` image animation duration when loading, defaults to `1000`ms (overrides config)                                                                                                                        |
 | `thumbnailSource`                | `String`             | (**Required**) Uri of the thumbnail image                                                                                                                                                                      |
 | `thumbnailAnimationDuration`     | `Number`             | Animation duration for thumbnail, defaults to `1000`ms (overrides config)                                                                                                                                      |
@@ -229,6 +230,7 @@ await CacheManager.isImageCached(uri);
 | `noCache`                        | `Boolean`            | Do not cache the image, defaults to `false` which means always cache the image                                                                                                                                 |
 | `maxAge`                         | `Number`             | Maximum age in hours to cache the image, defaults to `undefined` (infinite caching). **Auto pruning won't take into consideration this value, it will delete the image anyway if the `cacheLimit` is reached** |
 | `loadingImageStyle`              | `Object`             | Style for loading image component. Works if you don't provide a `loadingImageComponent`                                                                                                                        |
+| `imageStyle`                     | `Object`             | Image style, use it when loading local images via `require()`                                                                                                                                                  |
 | `loadingSource`                  | `object`             | Source for loading Image component. Works if you don't provide `loadingImageComponent`                                                                                                                         |
 | `onError`                        | `Func`               | Runs when there is an error loading the image from cache                                                                                                                                                       |
 | `onLoad`                         | `Func`               | Invoked when load completes successfully                                                                                                                                                                       |
