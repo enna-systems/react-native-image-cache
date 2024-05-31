@@ -34,7 +34,8 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "prettier": "prettier \"**/*.{ts,tsx,js}\" --write",
-    "bootstrap": "yarn install && yarn example"
+    "bootstrap": "yarn install && yarn example",
+    "prepare": "yarn build"
   },
   "dependencies": {
     "crypto-js": "^4.1.1"
