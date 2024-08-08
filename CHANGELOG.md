@@ -1,6 +1,41 @@
 # Changelog
 
-## [v2.7.0](https://github.com/georstat/react-native-image-cache/compare/v2.6.0...v2.7.0)
+## [v3.1.0](https://github.com/georstat/react-native-image-cache/compare/v2.9.0...v3.1.0)
+
+#### Improvements
+
+- chore: updated dev and example packages ([b534f4f](https://github.com/georstat/react-native-image-cache/commit/b534f4f4717c1a3d0653a6f1ab013edc2d28b15f)).
+- chore: removed husky, added lefthook ([f6d0745](https://github.com/georstat/react-native-image-cache/commit/f6d0745f27b5f5ea305946bd8303dc0141ff4a54)).
+- chore: prettified, linted and a-b sorted some props ([708340d](https://github.com/georstat/react-native-image-cache/commit/708340dd328da559731cd1ca59f60b404fa223a3)).
+- chore: renamed animated style variables for better readability ([3b7486b](https://github.com/georstat/react-native-image-cache/commit/3b7486bfa99ce8efd748ac9a8d790c8a3b0298f3)).
+- chore: updated CHANGELOG.md ([2c019c1](https://github.com/georstat/react-native-image-cache/commit/2c019c1abc049c8680e488c8cba140859b710211)).
+- chore: added 408, 500 & 503 error codes in the retry function ([e823000](https://github.com/georstat/react-native-image-cache/commit/e823000129d9e0b298e0463caa5768844f4d055f)).
+- chore: use root on lefthook for example run ([66e04eb](https://github.com/georstat/react-native-image-cache/commit/66e04eb22ce5d3d96278c4f3ec2a1a6563721584)).
+- chore: use `forEach` instead of `map` in prefetch function ([9ab5e91](https://github.com/georstat/react-native-image-cache/commit/9ab5e91ebfdeecf14372f6c87ded35f08e796107)).
+- chore: yarn prettier now runs first on lefthook example run to avoid eslint issues afterwards ([5169b0e](https://github.com/georstat/react-native-image-cache/commit/5169b0e9a32fc2be648b9a6433ae0dac22825d9c)).
+
+#### Documentations
+
+- docs: added `imageStyle` prop and info about supporting local images ([23e2a70](https://github.com/georstat/react-native-image-cache/commit/23e2a70d01441b97d1bee9e1448d74e1123f4a28)).
+
+## [v2.9.0](https://github.com/georstat/react-native-image-cache/compare/v2.8.0...v2.9.0) - 2023-08-10
+
+#### Improvements
+
+- chore: updated dev and example packages ([eba84f1](https://github.com/georstat/react-native-image-cache/commit/eba84f101269b150e1718fe4a1f13f8e50fc5d0e)).
+
+#### Documentations
+
+- docs: added supports new Arch in Features ([bd859ef](https://github.com/georstat/react-native-image-cache/commit/bd859ef2be9e1c4c603939925d0808021de04eda)).
+
+## [v2.8.0](https://github.com/georstat/react-native-image-cache/compare/v2.7.0...v2.8.0) - 2023-08-07
+
+#### Improvements
+
+- chore: updated dev and example packages ([8633bbb](https://github.com/georstat/react-native-image-cache/commit/8633bbbdb3494dbe0fdc493f1a800617731034a1)).
+- chore: import useRef instead of React.useRef ([d02ea03](https://github.com/georstat/react-native-image-cache/commit/d02ea03717374c5b76eb380fc37a0a95bfde66f8)).
+
+## [v2.7.0](https://github.com/georstat/react-native-image-cache/compare/v2.6.0...v2.7.0) - 2023-07-31
 
 #### Improvements
 

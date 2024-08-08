@@ -4,11 +4,12 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 import {
   ImageLoadEventData,
+  ImageSourcePropType,
   NativeSyntheticEvent,
-  Platform,
   StyleSheet,
   View,
   Image,
@@ -16,13 +17,14 @@ import {
 
 import CacheManager from './CacheManager';
 import { ImageProps, IProps } from './types';
+import { isAndroid, isImageWithRequire, isRemoteImage } from './helpers';
 
 const defaultProps = {
   onError: () => {},
 };
 
 function useIsComponentMounted() {
-  const isMounted = React.useRef(false);
+  const isMounted = useRef(false);
   // @ts-ignore
   useEffect(() => {
     isMounted.current = true;
@@ -53,18 +55,20 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   const [error, setError] = useStateIfMounted<boolean>(false);
   const [uri, setUri] = useStateIfMounted<string | undefined>(undefined);
   const { source: propsSource, options: propsOptions } = props;
-  const [currentSource, setCurrentSource] = React.useState<string>(propsSource);
+  const currentSource = useRef<string>(propsSource);
 
   useEffect(() => {
-    if (propsSource !== uri) {
-      load(props).catch();
+    if (isRemoteImage(propsSource)) {
+      load(props as ImageProps).catch();
+    } else {
+      setUri(propsSource);
     }
-    if (propsSource !== currentSource) {
-      setCurrentSource(propsSource);
-      setUri(undefined);
+
+    if (propsSource !== currentSource.current) {
+      currentSource.current = propsSource;
     }
     /* eslint-disable react-hooks/exhaustive-deps */
-  }, [propsSource, uri, propsOptions]);
+  }, [propsSource, propsOptions]);
 
   const load = async ({
     maxAge,
@@ -86,19 +90,26 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
           setUri(path);
           setError(false);
         } else {
+          setUri(undefined);
           setError(true);
           onError({
             nativeEvent: { error: new Error('Could not load image') },
           });
         }
       } catch (e: any) {
+        setUri(undefined);
         setError(true);
         onError({ nativeEvent: { error: e } });
       }
     }
   };
 
-  const onImageError = (): void => setError(true);
+  const onImageError = (): void => {
+    if (props.onError) {
+      props.onError();
+    }
+    setError(true);
+  };
 
   const onImageLoad = (e: NativeSyntheticEvent<ImageLoadEventData>): void => {
     if (props.onLoad) {
@@ -107,51 +118,52 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   };
 
   const {
-    accessibilityRole,
-    accessibilityRoleThumbnail,
-    accessibilityRoleLoadingSource,
     accessibilityHint,
-    accessibilityHintLoadingImage,
-    accessibilityHintThumbnail,
     accessibilityLabel,
-    accessibilityLabelLoadingImage,
-    accessibilityLabelThumbnail,
-    blurRadius,
-    loadingImageComponent: LoadingImageComponent,
-    loadingImageStyle = props.style,
+    accessibilityRole,
     loadingSource,
     resizeMode,
     style,
     testID,
-    thumbnailSource,
     ...rest
   } = props;
 
   const imageSource = useMemo(() => {
-    return error || !uri
-      ? loadingSource
-      : {
-          uri: Platform.OS === 'android' ? `file://${uri}` : uri,
-        };
-  }, [uri, error]);
+    if (error || !uri) {
+      return loadingSource;
+    }
+
+    if (isRemoteImage(propsSource) || !isImageWithRequire(propsSource)) {
+      return {
+        uri: isAndroid() ? `file://${uri}` : uri,
+      };
+    }
+
+    /* If reached here it means it's not http image or local path eg:"/data/user/0/com.reactnativeimagecacheexample/.."
+     * so its local image with Require method
+     */
+    return uri as ImageSourcePropType;
+  }, [uri, error, propsSource]);
 
   return (
     <View style={[styles.container, style]} testID={testID}>
-      <Image
-        {...rest}
-        accessibilityHint={accessibilityHint}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={accessibilityRole || 'image'}
-        accessible
-        onError={onImageError}
-        onLoad={onImageLoad}
-        onLoadEnd={props.onLoadEnd}
-        resizeMode={resizeMode || 'contain'}
-        // @ts-ignore
-        source={imageSource}
-        // @ts-ignore
-        style={[styles.imageStyle]}
-      />
+      {imageSource ? (
+        <Image
+          {...rest}
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole={accessibilityRole || 'image'}
+          accessible
+          onError={onImageError}
+          onLoad={onImageLoad}
+          onLoadEnd={props.onLoadEnd}
+          resizeMode={resizeMode || 'contain'}
+          // @ts-ignore
+          source={imageSource}
+          // @ts-ignore
+          style={[styles.imageStyle]}
+        />
+      ) : null}
     </View>
   );
 };

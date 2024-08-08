@@ -25,13 +25,17 @@ CacheManager.config = {
   sourceAnimationDuration: 1000,
   thumbnailAnimationDuration: 1000,
   getCustomCacheKey: (source: string) => {
-    // Remove params from the URL for caching images (useful for caching images from Amazons S3 bucket and etc)
+    /* Remove params from the URL for caching images
+     * (useful for caching images from Amazons S3 bucket etc.)
+     */
     let newCacheKey = source;
     if (source.includes('?')) {
       newCacheKey = source.substring(0, source.lastIndexOf('?'));
     }
     return newCacheKey;
   },
+  maxRetries: 3,
+  retryDelay: 3000,
 };
 
 const prefetchImage =
@@ -51,6 +55,8 @@ const imgThumb =
 
 const img2 =
   'https://images.unsplash.com/photo-1623849778517-668dffe703fb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format';
+
+const localImage = require('../assets/building-image.jpg');
 
 const App = ({ navigation }: { navigation: any }) => {
   const [source, setSource] = React.useState(img);
@@ -118,6 +124,18 @@ const App = ({ navigation }: { navigation: any }) => {
             loadingImageComponent={ImagePlaceholder}
           />
         </View>
+        <Text style={styles.bottomText}>Local Image With require()</Text>
+        <View style={styles.cachedImageContainer}>
+          <CachedImage
+            /* imageStyle prop is required when using require
+             * for the image to respect the height and width
+             */
+            imageStyle={styles.imageRequireStyle}
+            resizeMode={'cover'}
+            source={localImage}
+            style={styles.image}
+          />
+        </View>
         <View style={styles.clearCacheButtonContainer}>
           <Button
             color={pickButtonColor}
@@ -179,6 +197,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 12,
     marginTop: 12,
+  },
+  imageRequireStyle: {
+    height: '100%',
+    width: '100%',
   },
 });
 
