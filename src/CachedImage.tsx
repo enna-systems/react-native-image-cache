@@ -147,21 +147,23 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
 
   return (
     <View style={[styles.container, style]} testID={testID}>
-      <Image
-        {...rest}
-        accessibilityHint={accessibilityHint}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole={accessibilityRole || 'image'}
-        accessible
-        onError={onImageError}
-        onLoad={onImageLoad}
-        onLoadEnd={props.onLoadEnd}
-        resizeMode={resizeMode || 'contain'}
-        // @ts-ignore
-        source={imageSource}
-        // @ts-ignore
-        style={[styles.imageStyle]}
-      />
+      {imageSource ? (
+        <Image
+          {...rest}
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole={accessibilityRole || 'image'}
+          accessible
+          onError={onImageError}
+          onLoad={onImageLoad}
+          onLoadEnd={props.onLoadEnd}
+          resizeMode={resizeMode || 'contain'}
+          // @ts-ignore
+          source={imageSource}
+          // @ts-ignore
+          style={[styles.imageStyle]}
+        />
+      ) : null}
     </View>
   );
 };
